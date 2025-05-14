@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Atestados Médicos</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2c7da0;
+            --secondary-color: #468faf;
+            --background-color: #f8f9fa;
+            --text-color: #2b2d42;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            max-width: 450px;
+            width: 100%;
+            margin: auto;
+            margin-top: 2rem;
+        }
+
+        .form-label {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(44, 125, 160, 0.25);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .icon-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .icon-container i {
+            font-size: 3rem;
+            color: var(--primary-color);
+        }
+
+        .required-field::after {
+            content: "*";
+            color: #dc3545;
+            margin-left: 4px;
+        }
+
+        .alert {
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Melhorias de responsividade */
+        @media (max-width: 767.98px) {
+            .header {
+                padding: 1.5rem 0;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header .lead {
+                font-size: 1rem;
+            }
+            
+            .login-container {
+                margin-top: 1.5rem;
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .header {
+                padding: 1rem 0;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header .lead {
+                font-size: 0.9rem;
+            }
+            
+            .login-container {
+                margin: 1rem 1rem 0;
+                padding: 1.25rem;
+                max-width: none;
+            }
+            
+            .btn-primary {
+                padding: 0.6rem 1.2rem;
+            }
+            
+            form {
+                margin-bottom: 0;
+            }
+        }
+        
+        @media (max-height: 700px) {
+            .header {
+                padding: 1rem 0;
+            }
+            
+            .login-container {
+                margin-top: 1rem;
+                padding: 1.25rem;
+            }
+            
+            .form-group {
+                margin-bottom: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold">Plataforma Inteligente para Gestão de Atestados</h1>
+                    <p class="lead">Acesse o sistema com suas credenciais</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <i class="fas fa-hospital fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="login-container">
+            <div class="icon-container">
+                <i class="fas fa-user-lock"></i>
+            </div>
+
+            <form id="loginForm" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="email" class="form-label required-field">Email</label>
+                    <input type="email" class="form-control" id="email" required placeholder="Digite seu email">
+                    <div class="invalid-feedback">
+                        Por favor, informe um email válido.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="senha" class="form-label required-field">Senha</label>
+                    <input type="password" class="form-control" id="senha" required placeholder="Digite sua senha">
+                    <div class="invalid-feedback">
+                        Por favor, informe sua senha.
+                    </div>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="lembrar">
+                    <label class="form-check-label" for="lembrar">Lembrar-me</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-sign-in-alt me-2"></i>Entrar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS e Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Validação do formulário
+            if (!e.target.checkValidity()) {
+                e.stopPropagation();
+                e.target.classList.add('was-validated');
+                return;
+            }
+
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+
+            try {
+                // Chamada real para a API de login
+                const response = await fetch('/api/usuario/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        Email: email, 
+                        Senha: senha 
+                    })
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    
+                    // Depurar os dados do usuário
+                    console.log('Login bem-sucedido, dados do usuário:', userData);
+                    
+                    // Armazenar os dados do usuário no localStorage
+                    localStorage.setItem('usuarioId', userData.id);
+                    localStorage.setItem('usuarioNome', userData.nome);
+                    localStorage.setItem('usuarioEmail', userData.email);
+                    localStorage.setItem('usuarioIsAdmin', userData.isAdmin);
+                    
+                    console.log('Dados armazenados no localStorage:', {
+                        id: localStorage.getItem('usuarioId'),
+                        nome: localStorage.getItem('usuarioNome'),
+                        email: localStorage.getItem('usuarioEmail'),
+                        isAdmin: localStorage.getItem('usuarioIsAdmin')
+                    });
+                    
+                    // Redirecionar após login bem-sucedido
+                    if (userData.isAdmin) {
+                        // Se for admin, vai para uma página de administração (a ser criada)
+                        showAlert('success', 'Login realizado com sucesso! Redirecionando para área de administração...');
+                        setTimeout(() => {
+                            window.location.href = "/admin.html";
+                        }, 1500);
+                    } else {
+                        // Se for usuário comum, vai para o painel do funcionário
+                        showAlert('success', 'Login realizado com sucesso! Redirecionando...');
+                        setTimeout(() => {
+                            window.location.href = "/funcionario.html";
+                        }, 1500);
+                    }
+                } else {
+                    showAlert('danger', 'Credenciais inválidas. Por favor, tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showAlert('danger', 'Erro ao fazer login. Por favor, tente novamente.');
+            }
+        });
+
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.role = 'alert';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+
+            const form = document.getElementById('loginForm');
+            form.parentNode.insertBefore(alertDiv, form);
+
+            // Remove o alerta após 5 segundos
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html> 

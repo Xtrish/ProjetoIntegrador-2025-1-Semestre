@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Funcionário - TechSolutions</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2c7da0;
+            --secondary-color: #468faf;
+            --background-color: #f8f9fa;
+            --text-color: #2b2d42;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .icon-container {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .info-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+
+        .info-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-label {
+            font-weight: 500;
+            min-width: 150px;
+        }
+
+        .footer {
+            margin-top: auto;
+            padding: 1.5rem 0;
+            background-color: #f1f1f1;
+        }
+
+        .sidebar {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+
+        .nav-pills .nav-link {
+            color: var(--text-color);
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-pills .nav-link:hover {
+            background-color: rgba(44, 125, 160, 0.1);
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .nav-pills .nav-link i {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .progress {
+            height: 8px;
+            margin-top: 0.5rem;
+        }
+
+        .badge-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        @media (max-width: 767.98px) {
+            .sidebar {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Melhorias de responsividade */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .atestado-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+        
+        @media (max-width: 767.98px) {
+            .header {
+                padding: 1rem 0;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header .lead {
+                font-size: 0.9rem;
+            }
+            
+            .card {
+                margin-bottom: 1rem;
+            }
+            
+            .atestado-icon {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 0.5rem 1rem;
+            }
+            
+            .table th, .table td {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+            
+            .nav-pills .nav-link {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .modal-dialog {
+                margin: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .container {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            
+            .table th, .table td {
+                padding: 0.4rem;
+                font-size: 0.8rem;
+            }
+            
+            .card-title {
+                font-size: 1.1rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .btn-group-sm > .btn, .btn-sm {
+                padding: 0.2rem 0.4rem;
+                font-size: 0.75rem;
+            }
+            
+            .profile-container h2, 
+            .history-container h2 {
+                font-size: 1.2rem;
+            }
+            
+            .user-info {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="h4 mb-0">Portal do Funcionário</h1>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="d-flex justify-content-md-end align-items-center">
+                        <span class="me-3" id="userGreeting">Olá, <span id="userName">Carregando...</span></span>
+                        <button id="btnLogout" class="btn btn-sm btn-light">
+                            <i class="fas fa-sign-out-alt me-1"></i> Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-4">
+        <div class="row">
+            <!-- Sidebar / Menu -->
+            <div class="col-md-3 mb-4">
+                <div class="sidebar">
+                    <div class="text-center mb-4">
+                        <div class="icon-container">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <h2 class="h5 mb-2" id="userNameSidebar">Carregando...</h2>
+                        <p class="text-muted mb-0">Funcionário</p>
+                    </div>
+                    <hr>
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-tab="dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/EnviarAtestado.html">
+                                <i class="fas fa-file-medical"></i> Enviar Atestado
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-tab="history">
+                                <i class="fas fa-history"></i> Histórico
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <h2 class="h4 mb-4">Dashboard</h2>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card text-center h-100">
+                                <div class="card-body">
+                                    <i class="fas fa-file-medical fa-3x mb-3 text-primary"></i>
+                                    <h5 class="card-title">Atestados</h5>
+                                    <p class="card-text display-6" id="totalAtestados">0</p>
+                                    <div id="atestadosStatus" class="d-flex justify-content-center gap-2 mb-2">
+                                        <span class="badge bg-warning">0 Pendentes</span>
+                                        <span class="badge bg-success">0 Aprovados</span>
+                                        <span class="badge bg-danger">0 Rejeitados</span>
+                                    </div>
+                                    <p class="text-muted">Este ano</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Profile Tab -->
+                <div id="profile" class="tab-content" style="display: none;">
+                    <h2 class="h4 mb-4">Meu Perfil</h2>
+                    <div class="info-box">
+                        <h3 class="h5 info-title">Informações Pessoais</h3>
+                        <div class="info-item">
+                            <div class="info-label">Nome Completo:</div>
+                            <div class="info-value" id="profileName">Carregando...</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">E-mail:</div>
+                            <div class="info-value" id="profileEmail">Carregando...</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Matrícula:</div>
+                            <div class="info-value">FN-1234</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Departamento:</div>
+                            <div class="info-value">Desenvolvimento</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Cargo:</div>
+                            <div class="info-value">Desenvolvedor Júnior</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Data de Admissão:</div>
+                            <div class="info-value">15/01/2022</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h3 class="h5 info-title">Dados Profissionais</h3>
+                        <div class="info-item">
+                            <div class="info-label">Gestor:</div>
+                            <div class="info-value">Carlos Silva</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Horário:</div>
+                            <div class="info-value">08:00 - 17:00 (Seg-Sex)</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Férias Disponíveis:</div>
+                            <div class="info-value">20 dias</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Próxima Avaliação:</div>
+                            <div class="info-value">15/04/2024</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h3 class="h5 info-title">Habilidades</h3>
+                        <div class="mb-2">
+                            <span class="badge bg-primary me-1">HTML</span>
+                            <span class="badge bg-primary me-1">CSS</span>
+                            <span class="badge bg-primary me-1">JavaScript</span>
+                            <span class="badge bg-primary me-1">React</span>
+                            <span class="badge bg-primary me-1">SQL</span>
+                            <span class="badge bg-primary me-1">Git</span>
+                            <span class="badge bg-primary me-1">C#</span>
+                            <span class="badge bg-primary me-1">.NET</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary">
+                        <i class="fas fa-edit me-2"></i>Editar Perfil
+                    </button>
+                </div>
+                
+                <!-- History Tab -->
+                <div id="history" class="tab-content" style="display: none;">
+                    <h2 class="h4 mb-4">Histórico</h2>
+                    <div class="info-box">
+                        <h3 class="h5 info-title">Histórico de Atestados</h3>
+                        
+                        <!-- Legenda de status -->
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center">
+                                <strong class="me-2">Status:</strong>
+                                <span class="badge bg-warning me-2">Pendente</span>
+                                <span class="badge bg-success me-2">Aprovado</span>
+                                <span class="badge bg-danger me-2">Rejeitado</span>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Médico</th>
+                                        <th>CRM</th>
+                                        <th>Dias</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>12/02/2024</td>
+                                        <td>Dr. Fernando Costa</td>
+                                        <td>54321-SP</td>
+                                        <td>2</td>
+                                        <td><span class="badge bg-success">Aprovado</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>05/01/2024</td>
+                                        <td>Dra. Ana Oliveira</td>
+                                        <td>12345-SP</td>
+                                        <td>1</td>
+                                        <td><span class="badge bg-success">Aprovado</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="small m-0">&copy; 2024 TechSolutions. Todos os direitos reservados.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="small m-0">Portal do Funcionário v1.0</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <script>
+        let refreshInterval;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const usuarioId = localStorage.getItem('usuarioId');
+            const usuarioNome = localStorage.getItem('usuarioNome');
+            const usuarioEmail = localStorage.getItem('usuarioEmail');
+            const usuarioIsAdmin = localStorage.getItem('usuarioIsAdmin');
+            
+            console.log('Verificando credenciais de usuário:', {
+                id: usuarioId,
+                nome: usuarioNome,
+                email: usuarioEmail,
+                isAdmin: usuarioIsAdmin
+            });
+            
+            // Se usuário não estiver logado, redirecionar para login
+            if (!usuarioId) {
+                console.log('Usuário não logado. Redirecionando para login...');
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            // Preencher informações do usuário
+            document.getElementById('userName').textContent = usuarioNome;
+            document.getElementById('userNameSidebar').textContent = usuarioNome;
+            document.getElementById('profileName').textContent = usuarioNome;
+            document.getElementById('profileEmail').textContent = usuarioEmail;
+            
+            // Carregar número de atestados para o dashboard
+            carregarContadorAtestados(usuarioId);
+            
+            // Carregar atestados do usuário
+            carregarAtestados(usuarioId);
+            
+            // Iniciar atualização automática para a aba de histórico
+            startAutoRefresh(usuarioId);
+            
+            // Botão de logout
+            document.getElementById('btnLogout').addEventListener('click', function() {
+                stopAutoRefresh();
+                localStorage.clear();
+                window.location.href = '/login.html';
+            });
+            
+            // Navegação entre abas
+            document.querySelectorAll('.nav-link[data-tab]').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Desativar todas as abas
+                    document.querySelectorAll('.nav-link[data-tab]').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+                    
+                    // Ativar a aba clicada
+                    this.classList.add('active');
+                    document.getElementById(this.getAttribute('data-tab')).style.display = 'block';
+                    
+                    // Se a aba for o histórico, recarregar os atestados
+                    if (this.getAttribute('data-tab') === 'history') {
+                        carregarAtestados(usuarioId);
+                    }
+                    
+                    // Se a aba for o dashboard, recarregar o contador
+                    if (this.getAttribute('data-tab') === 'dashboard') {
+                        carregarContadorAtestados(usuarioId);
+                    }
+                });
+            });
+        });
+        
+        // Função para iniciar atualização automática
+        function startAutoRefresh(usuarioId) {
+            // Parar o intervalo anterior se existir
+            stopAutoRefresh();
+            
+            // Definir um novo intervalo para atualizar a cada 30 segundos
+            refreshInterval = setInterval(function() {
+                // Atualizar apenas se a aba de histórico estiver visível
+                if (document.getElementById('history').style.display === 'block') {
+                    carregarAtestados(usuarioId);
+                    console.log('Atualizando lista de atestados automaticamente...');
+                }
+            }, 30000); // 30 segundos
+        }
+        
+        // Função para parar atualização automática
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+            }
+        }
+        
+        // Função para carregar atestados do usuário
+        async function carregarAtestados(usuarioId) {
+            const tableBody = document.querySelector('#history table tbody');
+            tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-3"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Carregando atestados...</p></td></tr>';
+            
+            try {
+                // Garantir que temos um ID de usuário válido
+                if (!usuarioId) {
+                    console.error('ID de usuário não fornecido');
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-3">
+                                <p class="mb-0 text-danger">Erro: ID de usuário não fornecido.</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                console.log('Iniciando carregamento de atestados para usuário:', usuarioId);
+                
+                // Fazer a requisição para a API
+                const response = await fetch(`/api/atestado?usuarioId=${usuarioId}`);
+                
+                // Verificar se a resposta foi bem-sucedida
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Erro ao carregar atestados. Status:', response.status, 'Resposta:', errorText);
+                    
+                    // Verificar se o erro é de "Usuário não encontrado" e fornecer uma mensagem específica
+                    if (response.status === 404 && errorText.includes("Usuário não encontrado")) {
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="6" class="text-center py-3">
+                                    <p class="mb-0 text-danger">Usuário não encontrado na base de dados.</p>
+                                    <p class="small text-muted">Suas credenciais armazenadas parecem estar inválidas.</p>
+                                    <button class="btn btn-primary mt-2" onclick="resetarLogin()">Ir para a página de login</button>
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-3">
+                                <p class="mb-0 text-danger">Erro ao carregar atestados. Status: ${response.status} ${response.statusText}</p>
+                                <p class="small text-muted">Detalhes: ${errorText}</p>
+                                <button class="btn btn-sm btn-primary mt-2" onclick="carregarAtestados(${usuarioId})">Tentar novamente</button>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // Ler o texto da resposta
+                console.log('Resposta recebida, convertendo para JSON');
+                const responseText = await response.text();
+                
+                // Se a resposta estiver vazia, tratar como lista vazia
+                if (!responseText || responseText.trim() === '') {
+                    console.log('Resposta vazia recebida');
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-3">
+                                <p class="mb-0 text-muted">Você ainda não possui atestados cadastrados.</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                console.log('Texto da resposta:', responseText);
+                
+                // Tentar analisar a resposta como JSON
+                let atestados;
+                try {
+                    atestados = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Erro ao converter resposta para JSON:', parseError);
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-3">
+                                <p class="mb-0 text-danger">Erro ao processar dados dos atestados.</p>
+                                <p class="small text-muted">Detalhes: ${parseError.message}</p>
+                                <button class="btn btn-sm btn-primary mt-2" onclick="carregarAtestados(${usuarioId})">Tentar novamente</button>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                console.log('Atestados carregados:', atestados);
+                
+                // Limpar tabela
+                tableBody.innerHTML = '';
+                
+                // Verificar se a resposta é um array e se tem itens
+                if (!Array.isArray(atestados) || atestados.length === 0) {
+                    // Se não tiver atestados, mostrar mensagem
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-3">
+                                <p class="mb-0 text-muted">Você ainda não possui atestados cadastrados.</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // Adicionar cada atestado à tabela
+                atestados.forEach(atestado => {
+                    console.log('Processando atestado:', atestado);
+                    
+                    // Verificar se o atestado tem todos os campos necessários
+                    if (!atestado || !atestado.dataAtestado || !atestado.nomeMedico || !atestado.crm) {
+                        console.error('Atestado com dados incompletos:', atestado);
+                        return; // Pular este atestado
+                    }
+                    
+                    // Formatar a data
+                    let dataFormatada;
+                    try {
+                        dataFormatada = new Date(atestado.dataAtestado).toLocaleDateString('pt-BR');
+                    } catch (error) {
+                        console.error('Erro ao formatar data:', error);
+                        dataFormatada = 'Data inválida';
+                    }
+                    
+                    // Determinar o status do atestado para exibição
+                    let statusBadge;
+                    switch (atestado.status) {
+                        case 'Aprovado':
+                            statusBadge = '<span class="badge bg-success">Aprovado</span>';
+                            break;
+                        case 'Rejeitado':
+                            // Adicionar tooltip com o motivo da rejeição
+                            const motivoRejeicao = atestado.motivoRejeicao || 'Não informado';
+                            statusBadge = `<span class="badge bg-danger" data-bs-toggle="tooltip" title="Motivo: ${motivoRejeicao}">Rejeitado</span>`;
+                            break;
+                        default:
+                            statusBadge = '<span class="badge bg-warning">Pendente</span>';
+                            break;
+                    }
+                    
+                    // Adicionar linha na tabela
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${dataFormatada}</td>
+                            <td>${atestado.nomeMedico}</td>
+                            <td>${atestado.crm}</td>
+                            <td>1</td>
+                            <td>${statusBadge}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="visualizarAtestado(${atestado.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                // Adicionar event listeners para botões após adicionar ao DOM
+                document.querySelectorAll('#history table .btn').forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.stopPropagation(); // Impedir propagação do evento
+                    });
+                });
+                
+                // Inicializar tooltips
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+                
+            } catch (error) {
+                console.error('Erro ao carregar atestados:', error);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-3">
+                            <p class="mb-0 text-danger">Erro ao carregar atestados: ${error.message}</p>
+                            <p class="small text-muted">Verifique o console do navegador para mais detalhes.</p>
+                            <button class="btn btn-sm btn-primary mt-2" onclick="carregarAtestados(${usuarioId})">Tentar novamente</button>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+        
+        // Função para visualizar um atestado
+        async function visualizarAtestado(id) {
+            const usuarioId = localStorage.getItem('usuarioId');
+            await obterDetalhesAtestado(id, usuarioId);
+        }
+
+        // Função para obter e exibir os detalhes do atestado em um modal
+        async function obterDetalhesAtestado(id, usuarioId) {
+            try {
+                // Fazer requisição para obter os detalhes do atestado
+                const response = await fetch(`/api/atestado/${id}?usuarioId=${usuarioId}`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Erro ao obter detalhes do atestado. Status:', response.status, 'Resposta:', errorText);
+                    
+                    // Mostrar alerta de erro
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+                    alertDiv.role = 'alert';
+                    alertDiv.innerHTML = `
+                        <strong>Erro!</strong> Não foi possível carregar os detalhes do atestado.
+                        <p class="small text-muted">Detalhes: ${errorText}</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                    `;
+                    
+                    // Adicionar alerta à página
+                    const mainContent = document.querySelector('.content-wrapper');
+                    if (mainContent && mainContent.firstChild) {
+                        mainContent.insertBefore(alertDiv, mainContent.firstChild);
+                    }
+                    
+                    return;
+                }
+                
+                // Converter resposta para JSON
+                const atestado = await response.json();
+                console.log('Detalhes do atestado:', atestado);
+                
+                // Formatar as datas
+                const dataAtestadoFormatada = new Date(atestado.dataAtestado).toLocaleDateString('pt-BR');
+                const dataCadastroFormatada = new Date(atestado.dataCadastro).toLocaleDateString('pt-BR');
+                
+                // Determinar o status para exibição
+                let statusBadge;
+                if (atestado.status === 'Aprovado') {
+                    statusBadge = '<span class="badge bg-success">Aprovado</span>';
+                } else if (atestado.status === 'Rejeitado') {
+                    // Adicionar tooltip com o motivo da rejeição
+                    const motivoRejeicao = atestado.motivoRejeicao || 'Não informado';
+                    statusBadge = `<span class="badge bg-danger" data-bs-toggle="tooltip" title="Motivo: ${motivoRejeicao}">Rejeitado</span>`;
+                } else {
+                    statusBadge = '<span class="badge bg-warning">Pendente</span>';
+                }
+                
+                // Criar modal dinamicamente
+                const modalDiv = document.createElement('div');
+                modalDiv.className = 'modal fade';
+                modalDiv.id = `atestadoModal_${id}`;
+                modalDiv.tabIndex = '-1';
+                modalDiv.setAttribute('aria-labelledby', `atestadoModalLabel_${id}`);
+                modalDiv.setAttribute('aria-hidden', 'true');
+                
+                // Construir o conteúdo do modal com os detalhes do atestado
+                modalDiv.innerHTML = `
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="atestadoModalLabel_${id}">Detalhes do Atestado</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <p><strong>Data do Atestado:</strong> ${dataAtestadoFormatada}</p>
+                                        <p><strong>Médico:</strong> ${atestado.nomeMedico}</p>
+                                        <p><strong>CRM:</strong> ${atestado.crm}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Status:</strong> ${statusBadge}</p>
+                                        <p><strong>Data de Cadastro:</strong> ${dataCadastroFormatada}</p>
+                                        <p><strong>Arquivo:</strong> ${atestado.nomeArquivo || 'Não disponível'}</p>
+                                    </div>
+                                </div>`;
+                
+                // Se tiver descrição, adicionar
+                if (atestado.descricao) {
+                    modalDiv.querySelector('.modal-body').innerHTML += `
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <p><strong>Descrição:</strong></p>
+                                <p>${atestado.descricao}</p>
+                            </div>
+                        </div>`;
+                }
+                
+                // Se o atestado foi rejeitado e tem motivo de rejeição, exibir
+                if (atestado.status === 'Rejeitado' && atestado.motivoRejeicao) {
+                    modalDiv.querySelector('.modal-body').innerHTML += `
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="alert alert-danger">
+                                    <h5 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Motivo da Rejeição:</h5>
+                                    <p class="mb-0">${atestado.motivoRejeicao}</p>
+                                </div>
+                            </div>
+                        </div>`;
+                }
+                
+                modalDiv.querySelector('.modal-content').innerHTML += `
+                    <div class="modal-footer">
+                        <a href="/api/atestado/download/${id}?usuarioId=${usuarioId}" class="btn btn-primary" target="_blank">
+                            <i class="fas fa-download me-1"></i> Baixar Atestado
+                        </a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    </div>`;
+                
+                // Adicionar o modal ao corpo do documento
+                document.body.appendChild(modalDiv);
+                
+                // Abrir o modal
+                const modal = new bootstrap.Modal(modalDiv);
+                modal.show();
+                
+                // Remover o modal do DOM quando for fechado
+                modalDiv.addEventListener('hidden.bs.modal', function () {
+                    document.body.removeChild(modalDiv);
+                });
+                
+            } catch (error) {
+                console.error('Erro ao obter detalhes do atestado:', error);
+                
+                // Mostrar mensagem de erro
+                alert('Erro ao carregar os detalhes do atestado. Por favor, tente novamente.');
+            }
+        }
+
+        // Função para carregar o contador de atestados para o dashboard
+        async function carregarContadorAtestados(usuarioId) {
+            try {
+                console.log('Carregando contador de atestados para usuário:', usuarioId);
+                
+                // Encontrar o card de atestados e seu elemento de número
+                // Abordagem mais compatível com diferentes navegadores
+                let cardNumeroAtestados = null;
+                const cards = document.querySelectorAll('.card-body');
+                for (const card of cards) {
+                    if (card.querySelector('.fa-file-medical')) {
+                        cardNumeroAtestados = card.querySelector('.card-text.display-6');
+                        break;
+                    }
+                }
+                
+                if (!cardNumeroAtestados) {
+                    console.error('Elemento para exibir o contador de atestados não encontrado');
+                    return;
+                }
+                
+                // Mostrar indicador de carregamento
+                cardNumeroAtestados.innerHTML = '<div class="spinner-border spinner-border-sm text-primary" role="status"></div>';
+                
+                // Primeiro, vamos carregar a lista completa de atestados para poder contar por status
+                const responseAtestados = await fetch(`/api/atestado/MeusAtestados?usuarioId=${usuarioId}`);
+                
+                if (!responseAtestados.ok) {
+                    const errorText = await responseAtestados.text();
+                    console.error('Erro ao carregar atestados. Status:', responseAtestados.status, 'Resposta:', errorText);
+                    
+                    // Verificar se o usuário não foi encontrado e mostrar mensagem adequada
+                    if (responseAtestados.status === 404 && errorText.includes("Usuário não encontrado")) {
+                        cardNumeroAtestados.textContent = 'Erro';
+                        
+                        // Adicionar um alerta na página
+                        const alertContainer = document.createElement('div');
+                        alertContainer.className = 'alert alert-danger mt-3';
+                        alertContainer.innerHTML = `
+                            <h4 class="alert-heading">Usuário não encontrado!</h4>
+                            <p>Suas credenciais salvas parecem estar inválidas. O usuário não foi encontrado na base de dados.</p>
+                            <hr>
+                            <p class="mb-0">
+                                <button class="btn btn-outline-light" onclick="resetarLogin()">Ir para a página de login</button>
+                            </p>
+                        `;
+                        
+                        // Adicionar o alerta no início da página
+                        const mainContent = document.querySelector('.content-wrapper');
+                        if (mainContent && mainContent.firstChild) {
+                            mainContent.insertBefore(alertContainer, mainContent.firstChild);
+                        }
+                        
+                        return;
+                    }
+                    
+                    cardNumeroAtestados.textContent = 'Erro';
+                    return;
+                }
+                
+                // Parsear a resposta
+                const data = await responseAtestados.json();
+                const listaAtestados = data.atestados || data; // Alguns endpoints retornam { atestados: [...] }, outros retornam diretamente o array
+                
+                console.log('Dados dos atestados recebidos:', listaAtestados);
+                
+                // Contar o total e por status
+                const total = listaAtestados.length;
+                const pendentes = listaAtestados.filter(a => !a.status || a.status === 'Pendente').length;
+                const aprovados = listaAtestados.filter(a => a.status === 'Aprovado').length;
+                const rejeitados = listaAtestados.filter(a => a.status === 'Rejeitado').length;
+                
+                // Atualizar o número total na tela
+                cardNumeroAtestados.textContent = total;
+                
+                // Atualizar os status
+                const statusContainer = document.getElementById('atestadosStatus');
+                if (statusContainer) {
+                    statusContainer.innerHTML = `
+                        <span class="badge bg-warning">${pendentes} Pendente${pendentes !== 1 ? 's' : ''}</span>
+                        <span class="badge bg-success">${aprovados} Aprovado${aprovados !== 1 ? 's' : ''}</span>
+                        <span class="badge bg-danger">${rejeitados} Rejeitado${rejeitados !== 1 ? 's' : ''}</span>
+                    `;
+                }
+                
+                console.log('Dashboard atualizado:', { total, pendentes, aprovados, rejeitados });
+                
+            } catch (error) {
+                console.error('Erro ao carregar contador de atestados:', error);
+                // Tentar encontrar o elemento novamente para o caso de algum erro
+                const cards = document.querySelectorAll('.card-body');
+                for (const card of cards) {
+                    if (card.innerHTML.includes('Atestados')) {
+                        const displayEl = card.querySelector('.card-text.display-6');
+                        if (displayEl) displayEl.textContent = 'Erro';
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Função para resetar login e redirecionar para a página de login
+        function resetarLogin() {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+</html> 

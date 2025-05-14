@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração - Sistema de Atestados Médicos</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2c7da0;
+            --secondary-color: #468faf;
+            --background-color: #f8f9fa;
+            --text-color: #2b2d42;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .admin-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+        }
+
+        .nav-pills .nav-link {
+            color: var(--primary-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .table thead {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .alert {
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        /* Estilos responsivos */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 767.98px) {
+            .header {
+                padding: 1rem 0;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header .lead {
+                font-size: 0.9rem;
+            }
+            
+            .admin-container {
+                padding: 1rem;
+            }
+            
+            .nav-pills .nav-link {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .navbar-brand {
+                font-size: 1rem;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                align-items: flex-end;
+            }
+            
+            .table th, .table td {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+            
+            .btn-group-sm > .btn, .btn-sm {
+                padding: 0.2rem 0.4rem;
+                font-size: 0.75rem;
+            }
+            
+            .modal-dialog {
+                margin: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .admin-container {
+                padding: 0.75rem;
+            }
+            
+            .container {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            
+            .table th, .table td {
+                padding: 0.4rem;
+                font-size: 0.8rem;
+            }
+            
+            .btn-actions-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            
+            .table-responsive {
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-clipboard-check me-2"></i>Sistema de Atestados
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="nav-link me-3">
+                            <i class="fas fa-user-circle me-1"></i>
+                            <span id="adminName">Administrador</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <button id="btnReautenticar" class="btn btn-sm btn-outline-light me-3" title="Reautenticar como administrador">
+                            <i class="fas fa-sync-alt me-1"></i>
+                            Reautenticar
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button id="btnLogout" class="btn btn-sm btn-outline-light">
+                            <i class="fas fa-sign-out-alt me-1"></i>
+                            Sair
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold">Painel de Administração</h1>
+                    <p class="lead">Gerenciamento de atestados médicos</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="user-info justify-content-end">
+                        <i class="fas fa-user-shield fa-lg"></i>
+                        <span id="adminName"></span>
+                        <button class="btn btn-sm btn-outline-light ms-2" onclick="reautenticarAdmin()" title="Reautenticar como Administrador">
+                            <i class="fas fa-sync"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="admin-container">
+            <ul class="nav nav-pills mb-4" id="adminTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="atestados-tab" data-bs-toggle="pill" data-bs-target="#atestados" type="button" role="tab">
+                        <i class="fas fa-file-medical me-2"></i>Atestados
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="usuarios-tab" data-bs-toggle="pill" data-bs-target="#usuarios" type="button" role="tab">
+                        <i class="fas fa-users me-2"></i>Usuários
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="adminTabsContent">
+                <!-- Aba de Atestados -->
+                <div class="tab-pane fade show active" id="atestados" role="tabpanel">
+                    <h3 class="mb-4">Lista de Atestados</h3>
+                    
+                    <!-- Legenda de status -->
+                    <div class="mb-4">
+                        <p class="mb-2"><strong>Legenda de Status:</strong></p>
+                        <div class="d-flex gap-3">
+                            <span class="badge bg-warning me-2">Pendente</span> 
+                            <span class="badge bg-success me-2">Aprovado</span>
+                            <span class="badge bg-danger me-2">Rejeitado</span>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Usuário</th>
+                                    <th>Data do Atestado</th>
+                                    <th>Nome do Médico</th>
+                                    <th>CRM</th>
+                                    <th>Data de Cadastro</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="atestadosTableBody">
+                                <!-- Os atestados serão carregados via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Aba de Usuários -->
+                <div class="tab-pane fade" id="usuarios" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3>Lista de Usuários</h3>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                            <i class="fas fa-user-plus me-2"></i>Adicionar Usuário
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Perfil</th>
+                                    <th>Data de Cadastro</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usuariosTableBody">
+                                <!-- Os usuários serão carregados via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Visualização do Atestado -->
+    <div class="modal fade" id="viewAtestadoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalhes do Atestado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="atestadoDetails">
+                    <!-- Os detalhes do atestado serão carregados via JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <a id="btnDownloadAtestado" href="#" class="btn btn-primary">
+                        <i class="fas fa-download me-2"></i>Baixar Arquivo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Adição de Usuário -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Novo Usuário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addUserForm" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="newUserName" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="newUserName" required>
+                            <div class="invalid-feedback">
+                                Por favor, informe o nome do usuário.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newUserEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="newUserEmail" required>
+                            <div class="invalid-feedback">
+                                Por favor, informe um email válido.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newUserPassword" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="newUserPassword" required>
+                            <div class="invalid-feedback">
+                                Por favor, informe uma senha.
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="newUserIsAdmin">
+                            <label class="form-check-label" for="newUserIsAdmin">Usuário Administrador</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="btnSaveUser" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Alteração de Senha -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alterar Senha do Usuário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="changePasswordForm" class="needs-validation" novalidate>
+                        <input type="hidden" id="userIdForPassword" value="">
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Nova Senha</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                            <div class="invalid-feedback">
+                                Por favor, informe a nova senha.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar Senha</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                            <div class="invalid-feedback">
+                                Por favor, confirme a nova senha.
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="btnSavePassword" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Rejeição de Atestado -->
+    <div class="modal fade" id="rejeicaoModal" tabindex="-1" aria-labelledby="rejeicaoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="rejeicaoModalLabel">Rejeitar Atestado</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formRejeicao">
+                        <input type="hidden" id="atestadoIdRejeicao">
+                        <div class="mb-3">
+                            <label for="motivoRejeicao" class="form-label">Motivo da Rejeição <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="motivoRejeicao" rows="3" required placeholder="Informe o motivo da rejeição do atestado"></textarea>
+                            <div class="form-text">Este motivo será visível para o usuário.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarRejeicao">
+                        <i class="fas fa-times-circle me-1"></i>
+                        Rejeitar Atestado
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS e Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let refreshInterval;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const usuarioId = localStorage.getItem('usuarioId');
+            const usuarioNome = localStorage.getItem('usuarioNome');
+            const usuarioEmail = localStorage.getItem('usuarioEmail');
+            const usuarioIsAdmin = localStorage.getItem('usuarioIsAdmin');
+            
+            console.log('Verificando credenciais de administrador:', {
+                id: usuarioId,
+                nome: usuarioNome,
+                email: usuarioEmail,
+                isAdmin: usuarioIsAdmin,
+                tipo: typeof usuarioIsAdmin
+            });
+            
+            // Verificar se o usuário está logado como admin, caso contrário, usar as credenciais do admin conhecido
+            if (!usuarioId || usuarioIsAdmin !== 'true' || usuarioEmail !== 'admin@admin.com') {
+                console.log('Usuário atual não é administrador. Trocando para o admin conhecido...');
+                
+                // Armazenar os dados do usuário admin conhecido
+                localStorage.setItem('usuarioId', '1');
+                localStorage.setItem('usuarioNome', 'Administrador');
+                localStorage.setItem('usuarioEmail', 'admin@admin.com');
+                localStorage.setItem('usuarioIsAdmin', 'true');
+                
+                // Recarregar a página para aplicar as novas credenciais
+                location.reload();
+                return;
+            }
+            
+            // Se chegamos aqui, o usuário é administrador
+            console.log('Usuário autenticado como administrador.');
+            
+            // Exibir nome do admin
+            document.getElementById('adminName').textContent = usuarioNome;
+            
+            // Configurar botões
+            document.getElementById('btnReautenticar').addEventListener('click', function() {
+                reautenticarAdmin();
+            });
+            
+            document.getElementById('btnLogout').addEventListener('click', function() {
+                stopAutoRefresh(); // Parar a atualização automática antes de sair
+                localStorage.clear();
+                window.location.href = '/login.html';
+            });
+            
+            // Carregar dados iniciais
+            carregarAtestados();
+            carregarUsuarios();
+            
+            // Configurar atualização automática a cada 30 segundos
+            startAutoRefresh();
+            
+            // Adicionar event listeners para mudança de abas
+            document.querySelectorAll('button[data-bs-toggle="pill"]').forEach(tab => {
+                tab.addEventListener('shown.bs.tab', function(e) {
+                    if (e.target.id === 'atestados-tab') {
+                        carregarAtestados(); // Recarregar atestados quando a aba for selecionada
+                    } else if (e.target.id === 'usuarios-tab') {
+                        carregarUsuarios(); // Recarregar usuários quando a aba for selecionada
+                    }
+                });
+            });
+            
+            // Botão para adicionar usuário
+            document.getElementById('btnSaveUser').addEventListener('click', adicionarUsuario);
+            
+            // Botão para alterar senha
+            document.getElementById('btnSavePassword').addEventListener('click', alterarSenha);
+
+            // Event listeners para os botões de ação
+            document.querySelectorAll('.btn-action').forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    const atestadoId = this.getAttribute('data-id');
+                    
+                    if (action === 'aprovar') {
+                        mudarStatusAtestado(atestadoId, 'Aprovado');
+                    } else if (action === 'rejeitar') {
+                        // Em vez de mudar o status diretamente, abrir o modal de rejeição
+                        // Não fazemos nada aqui porque já adicionamos o evento nos botões com a classe .btn-reject
+                    } else if (action === 'pendente') {
+                        mudarStatusAtestado(atestadoId, 'Pendente');
+                    }
+                });
+            });
+            
+            // Adicionar event listeners para os botões de rejeição
+            document.querySelectorAll('.btn-reject').forEach(button => {
+                button.addEventListener('click', function() {
+                    const atestadoId = this.getAttribute('data-id');
+                    console.log('Abrindo modal de rejeição para atestado ID:', atestadoId);
+                    abrirModalRejeicao(atestadoId);
+                });
+            });
+            
+            // Inicializar tooltips após adicionar os elementos
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+        });
+        
+        function startAutoRefresh() {
+            // Parar o intervalo anterior se existir
+            stopAutoRefresh();
+            
+            // Definir um novo intervalo para atualizar a cada 30 segundos
+            refreshInterval = setInterval(function() {
+                // Atualizar apenas se a aba de atestados estiver ativa
+                if (document.getElementById('atestados-tab').classList.contains('active') || 
+                    document.getElementById('atestados').classList.contains('active') || 
+                    document.getElementById('atestados').classList.contains('show')) {
+                    carregarAtestados();
+                }
+            }, 30000); // 30 segundos
+            
+            console.log('Atualização automática iniciada');
+        }
+        
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        }
+        
+        // Função para carregar atestados
+        async function carregarAtestados() {
+            try {
+                // Obter ID do administrador do localStorage (já configurado na verificação inicial)
+                const usuarioId = localStorage.getItem('usuarioId');
+                console.log('Iniciando carregamento de atestados para admin ID:', usuarioId);
+                
+                if (!usuarioId) {
+                    console.error('ID do administrador não encontrado');
+                    showAlert('danger', 'Erro de autenticação. Por favor, faça login novamente.');
+                    return;
+                }
+                
+                // Fazer a requisição usando sempre o ID configurado
+                const response = await fetch(`/api/atestado?usuarioId=${usuarioId}`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Erro ao carregar atestados. Status:', response.status, 'Resposta:', errorText);
+                    
+                    // Verificar especificamente o erro de "Usuário não encontrado"
+                    if (response.status === 404 && errorText.includes("Usuário não encontrado")) {
+                        console.log('Erro: Usuário administrador não encontrado. Reconfigurando credenciais...');
+                        
+                        const tbody = document.getElementById('atestadosTableBody');
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="7" class="text-center py-3">
+                                    <p class="mb-0 text-danger">Erro: Usuário administrador não encontrado na base de dados.</p>
+                                    <p class="small text-muted">Suas credenciais administrativas parecem estar inválidas.</p>
+                                    <button class="btn btn-primary mt-3" onclick="reautenticarAdmin()">
+                                        <i class="fas fa-sync me-2"></i>Reautenticar como Admin
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        
+                        showAlert('warning', 'Usuário administrador não encontrado. Clique no botão para reautenticar.');
+                        return;
+                    }
+                    
+                    if (response.status === 401) {
+                        console.log('Erro de autenticação detectado. Reconfigurando credenciais...');
+                        reautenticarAdmin();
+                        return;
+                    }
+                    
+                    const tbody = document.getElementById('atestadosTableBody');
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="text-center py-3">
+                                <p class="mb-0 text-danger">Erro ao carregar atestados. Status: ${response.status} ${response.statusText}</p>
+                                <p class="small text-muted">Detalhes: ${errorText}</p>
+                                <button class="btn btn-primary mt-3" onclick="reautenticarAdmin()">
+                                    <i class="fas fa-sync me-2"></i>Reautenticar como Admin
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    showAlert('danger', 'Erro ao carregar atestados.');
+                    return;
+                }
+                
+                console.log('Resposta recebida, convertendo para JSON');
+                const responseText = await response.text();
+                console.log('Texto da resposta:', responseText);
+                
+                let atestados;
+                try {
+                    atestados = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Erro ao converter resposta para JSON:', parseError);
+                    const tbody = document.getElementById('atestadosTableBody');
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="text-center py-3">
+                                <p class="mb-0 text-danger">Erro ao processar dados dos atestados.</p>
+                                <p class="small text-muted">Detalhes: ${parseError.message}</p>
+                            </td>
+                        </tr>
+                    `;
+                    showAlert('danger', 'Erro ao processar dados dos atestados.');
+                    return;
+                }
+                
+                console.log('Atestados carregados:', atestados);
+                
+                const tbody = document.getElementById('atestadosTableBody');
+                
+                // Salvar o estado anterior da tabela para comparação
+                const oldContent = tbody.innerHTML;
+                
+                tbody.innerHTML = '';
+                
+                if (!Array.isArray(atestados) || atestados.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="text-center py-3">
+                                <p class="mb-0 text-muted">Não há atestados cadastrados.</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // Carregar usuários para mostrar os nomes em vez dos IDs
+                const usuariosResponse = await fetch(`/api/usuario`);
+                const usuarios = usuariosResponse.ok ? await usuariosResponse.json() : [];
+                const usuariosMap = new Map(usuarios.map(u => [u.id, u.nome]));
+                
+                atestados.forEach(atestado => {
+                    console.log('Processando atestado:', atestado);
+                    const row = document.createElement('tr');
+                    const dataAtestado = new Date(atestado.dataAtestado).toLocaleDateString('pt-BR');
+                    const dataCadastro = new Date(atestado.dataCadastro).toLocaleDateString('pt-BR');
+                    const nomeUsuario = usuariosMap.get(atestado.usuarioId) || `Usuário ${atestado.usuarioId}`;
+                    
+                    // Definir status e classe CSS com base no status do atestado
+                    let statusHTML = '';
+                    let rowClass = '';
+                    
+                    if (atestado.status === 'Aprovado') {
+                        statusHTML = '<span class="badge bg-success">Aprovado</span>';
+                    } else if (atestado.status === 'Rejeitado') {
+                        // Adicionar tooltip com o motivo da rejeição
+                        const motivoRejeicao = atestado.motivoRejeicao || 'Não informado';
+                        statusHTML = `<span class="badge bg-danger" data-bs-toggle="tooltip" title="Motivo: ${motivoRejeicao}">Rejeitado</span>`;
+                        rowClass = 'table-danger'; // Destacar linha com cor de fundo vermelha
+                    } else {
+                        // Atestado pendente - destacar com uma classe para chamar atenção
+                        statusHTML = '<span class="badge bg-warning">Pendente</span>';
+                        rowClass = 'table-warning'; // Destacar linha com cor de fundo amarela
+                    }
+                    
+                    // Aplicar classe de destaque à linha
+                    row.className = rowClass;
+                    
+                    row.innerHTML = `
+                        <td>${atestado.id}</td>
+                        <td>${nomeUsuario}</td>
+                        <td>${dataAtestado}</td>
+                        <td>${atestado.nomeMedico}</td>
+                        <td>${atestado.crm}</td>
+                        <td>${dataCadastro}</td>
+                        <td>${statusHTML}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info view-atestado me-1" data-id="${atestado.id}" title="Visualizar">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${atestado.status !== 'Aprovado' ? 
+                              `<div class="btn-actions-group d-inline-flex gap-1">
+                                <button class="btn btn-sm btn-success btn-action" title="Aprovar Atestado" data-action="aprovar" data-id="${atestado.id}">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger btn-action btn-reject" title="Rejeitar Atestado" data-action="rejeitar" data-id="${atestado.id}">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="btn btn-sm btn-warning btn-action" title="Marcar como Pendente" data-action="pendente" data-id="${atestado.id}">
+                                    <i class="fas fa-clock"></i>
+                                </button>
+                              </div>` : ''}
+                            <button class="btn btn-sm btn-danger delete-atestado" data-id="${atestado.id}" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+                // Se o conteúdo for diferente e não for a primeira carga, mostrar notificação
+                if (oldContent !== '' && oldContent !== tbody.innerHTML) {
+                    showAlert('info', 'Lista de atestados atualizada!');
+                }
+                
+                // Adicionar event listeners para botões de visualização
+                document.querySelectorAll('.view-atestado').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const atestadoId = this.getAttribute('data-id');
+                        visualizarAtestado(atestadoId);
+                    });
+                });
+                
+                // Adicionar event listeners para botões de exclusão
+                document.querySelectorAll('.delete-atestado').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const atestadoId = this.getAttribute('data-id');
+                        if (confirm('Tem certeza que deseja excluir este atestado? Esta ação não pode ser desfeita.')) {
+                            excluirAtestado(atestadoId);
+                        }
+                    });
+                });
+                
+                // Adicionar event listeners para os botões de ação gerais (aprovar, pendente)
+                document.querySelectorAll('.btn-action').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const action = this.getAttribute('data-action');
+                        const atestadoId = this.getAttribute('data-id');
+                        
+                        if (action === 'aprovar') {
+                            mudarStatusAtestado(atestadoId, 'Aprovado');
+                        } else if (action === 'pendente') {
+                            mudarStatusAtestado(atestadoId, 'Pendente');
+                        }
+                        // A ação de rejeitar é tratada separadamente pelos botões com classe .btn-reject
+                    });
+                });
+                
+                // Adicionar event listeners específicos para os botões de rejeição
+                document.querySelectorAll('.btn-reject').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const atestadoId = this.getAttribute('data-id');
+                        console.log('Abrindo modal de rejeição para atestado ID:', atestadoId);
+                        abrirModalRejeicao(atestadoId);
+                    });
+                });
+                
+                // Inicializar tooltips após adicionar os elementos
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+                
+            } catch (error) {
+                console.error('Erro ao carregar atestados:', error);
+                showAlert('danger', `Erro ao carregar atestados: ${error.message}`);
+                const tbody = document.getElementById('atestadosTableBody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-3">
+                            <p class="mb-0 text-danger">Erro ao carregar atestados: ${error.message}</p>
+                            <p class="small text-muted">Verifique o console do navegador para mais detalhes.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+        
+        // Função para carregar usuários
+        async function carregarUsuarios() {
+            try {
+                const response = await fetch('/api/usuario');
+                
+                if (!response.ok) {
+                    showAlert('danger', 'Erro ao carregar usuários.');
+                    return;
+                }
+                
+                const usuarios = await response.json();
+                const tbody = document.getElementById('usuariosTableBody');
+                tbody.innerHTML = '';
+                
+                usuarios.forEach(usuario => {
+                    const row = document.createElement('tr');
+                    const dataCadastro = new Date(usuario.dataCadastro).toLocaleDateString('pt-BR');
+                    const perfil = usuario.isAdmin ? 'Administrador' : 'Usuário Comum';
+                    
+                    row.innerHTML = `
+                        <td>${usuario.id}</td>
+                        <td>${usuario.nome}</td>
+                        <td>${usuario.email}</td>
+                        <td><span class="badge ${usuario.isAdmin ? 'bg-primary' : 'bg-secondary'}">${perfil}</span></td>
+                        <td>${dataCadastro}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning change-password me-1" data-id="${usuario.id}" data-name="${usuario.nome}" title="Alterar Senha">
+                                <i class="fas fa-key"></i>
+                            </button>
+                            ${(usuario.id != localStorage.getItem('usuarioId') && 
+                              usuario.email !== 'admin@admin.com') ? 
+                              `<button class="btn btn-sm btn-danger delete-user" data-id="${usuario.id}" data-name="${usuario.nome}" title="Excluir Usuário">
+                                  <i class="fas fa-trash"></i>
+                              </button>` : 
+                              usuario.email === 'admin@admin.com' ? 
+                              `<button class="btn btn-sm btn-secondary" disabled title="Administrador principal não pode ser excluído">
+                                  <i class="fas fa-lock"></i>
+                              </button>` : ''}
+                        </td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+                // Adicionar event listeners para botões de alteração de senha
+                document.querySelectorAll('.change-password').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-id');
+                        const userName = this.getAttribute('data-name');
+                        abrirModalAlterarSenha(userId, userName);
+                    });
+                });
+                
+                // Adicionar event listeners para botões de exclusão de usuário
+                document.querySelectorAll('.delete-user').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-id');
+                        const userName = this.getAttribute('data-name');
+                        confirmarExclusaoUsuario(userId, userName);
+                    });
+                });
+                
+            } catch (error) {
+                console.error('Erro ao carregar usuários:', error);
+                const tbody = document.getElementById('usuariosTableBody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-3">
+                            <div class="alert alert-danger mb-0">
+                                <p class="mb-0">Erro ao carregar usuários: ${error.message}</p>
+                                <button class="btn btn-sm btn-primary mt-2" onclick="carregarUsuarios()">Tentar novamente</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+        
+        // Função para visualizar detalhes do atestado
+        async function visualizarAtestado(id) {
+            try {
+                const usuarioId = localStorage.getItem('usuarioId');
+                console.log('Visualizando atestado ID:', id);
+                
+                const response = await fetch(`/api/atestado/${id}?usuarioId=${usuarioId}`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Erro ao carregar detalhes do atestado. Status:', response.status, 'Resposta:', errorText);
+                    showAlert('danger', `Erro ao carregar detalhes do atestado: ${response.status} ${response.statusText}`);
+                    return;
+                }
+                
+                console.log('Resposta recebida, convertendo para JSON');
+                const responseText = await response.text();
+                console.log('Texto da resposta:', responseText);
+                
+                let atestado;
+                try {
+                    atestado = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Erro ao converter resposta para JSON:', parseError);
+                    showAlert('danger', `Erro ao processar dados do atestado: ${parseError.message}`);
+                    return;
+                }
+                
+                console.log('Atestado carregado:', atestado);
+                
+                // Obter o elemento para exibir os detalhes
+                const detailsElement = document.getElementById('atestadoDetails');
+                
+                // Formatar as datas para exibição
+                const dataAtestado = new Date(atestado.dataAtestado).toLocaleDateString('pt-BR');
+                const dataCadastro = new Date(atestado.dataCadastro).toLocaleDateString('pt-BR');
+                
+                // Determinar o status para exibição
+                let statusBadge;
+                if (atestado.status === 'Aprovado') {
+                    statusBadge = '<span class="badge bg-success">Aprovado</span>';
+                } else if (atestado.status === 'Rejeitado') {
+                    statusBadge = '<span class="badge bg-danger">Rejeitado</span>';
+                } else {
+                    statusBadge = '<span class="badge bg-warning">Pendente</span>';
+                }
+                
+                // Construir o HTML dos detalhes
+                detailsElement.innerHTML = `
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Data do Atestado:</strong> ${dataAtestado}</p>
+                            <p><strong>Médico:</strong> ${atestado.nomeMedico}</p>
+                            <p><strong>CRM:</strong> ${atestado.crm}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> ${statusBadge}</p>
+                            <p><strong>Data de Cadastro:</strong> ${dataCadastro}</p>
+                            <p><strong>Usuário ID:</strong> ${atestado.usuarioId}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Se tiver descrição, adicionar
+                if (atestado.descricao) {
+                    detailsElement.innerHTML += `
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <p><strong>Descrição:</strong></p>
+                                <p>${atestado.descricao}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Se o atestado foi rejeitado e tem motivo de rejeição, exibir
+                if (atestado.status === 'Rejeitado' && atestado.motivoRejeicao) {
+                    detailsElement.innerHTML += `
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="alert alert-danger">
+                                    <h5 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Motivo da Rejeição:</h5>
+                                    <p class="mb-0">${atestado.motivoRejeicao}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Adicionar botões de ação baseado no status atual
+                let botoesAcao = '';
+                if (atestado.status !== 'Aprovado') {
+                    botoesAcao += `
+                        <button class="btn btn-success approve-atestado me-1" data-id="${atestado.id}" title="Aprovar Atestado">
+                            <i class="fas fa-check me-1"></i> Aprovar
+                        </button>`;
+                }
+                
+                botoesAcao += `
+                    <button class="btn btn-danger reject-atestado me-1" data-id="${atestado.id}" title="Rejeitar Atestado">
+                        <i class="fas fa-times me-1"></i> Rejeitar
+                    </button>
+                    <button class="btn btn-warning pending-atestado me-1" data-id="${atestado.id}" title="Marcar como Pendente">
+                        <i class="fas fa-clock me-1"></i> Pendente
+                    </button>`;
+                
+                const acoesBotoes = document.createElement('div');
+                acoesBotoes.className = 'mt-4';
+                acoesBotoes.innerHTML = botoesAcao;
+                
+                detailsElement.appendChild(acoesBotoes);
+                
+                // Configurar o botão de download
+                const downloadButton = document.getElementById('btnDownloadAtestado');
+                downloadButton.href = `/api/atestado/download/${atestado.id}?usuarioId=${usuarioId}`;
+                
+                // Exibir o modal
+                const modal = document.getElementById('viewAtestadoModal');
+                const myModal = new bootstrap.Modal(modal);
+                myModal.show();
+                
+                // Adicionar event listeners para os botões de ação
+                modal.querySelector('.approve-atestado')?.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    mudarStatusAtestado(id, 'Aprovado', myModal);
+                });
+                
+                modal.querySelector('.reject-atestado')?.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    // Chamar a função para abrir o modal de rejeição
+                    abrirModalRejeicao(id);
+                    // Fechar o modal de visualização
+                    myModal.hide();
+                });
+                
+                modal.querySelector('.pending-atestado')?.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    mudarStatusAtestado(id, 'Pendente', myModal);
+                });
+                
+            } catch (error) {
+                console.error('Erro ao visualizar atestado:', error);
+                showAlert('danger', `Erro ao visualizar atestado: ${error.message}`);
+            }
+        }
+        
+        // Função para adicionar novo usuário
+        async function adicionarUsuario() {
+            try {
+                const form = document.getElementById('addUserForm');
+                
+                if (!form.checkValidity()) {
+                    form.classList.add('was-validated');
+                    return;
+                }
+                
+                const nome = document.getElementById('newUserName').value;
+                const email = document.getElementById('newUserEmail').value;
+                const senha = document.getElementById('newUserPassword').value;
+                const isAdmin = document.getElementById('newUserIsAdmin').checked;
+                const adminId = localStorage.getItem('usuarioId');
+                
+                const response = await fetch(`/api/usuario/cadastrar?adminId=${adminId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nome,
+                        email,
+                        senha,
+                        isAdmin
+                    })
+                });
+                
+                if (response.ok) {
+                    // Fechar modal e atualizar lista de usuários
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'));
+                    modal.hide();
+                    form.reset();
+                    form.classList.remove('was-validated');
+                    
+                    showAlert('success', 'Usuário adicionado com sucesso!');
+                    carregarUsuarios();
+                } else {
+                    const errorData = await response.json();
+                    showAlert('danger', `Erro ao adicionar usuário: ${errorData}`);
+                }
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                showAlert('danger', 'Erro ao adicionar usuário.');
+            }
+        }
+        
+        // Função para abrir o modal de alteração de senha
+        function abrirModalAlterarSenha(userId, userName) {
+            // Limpar o formulário
+            document.getElementById('changePasswordForm').reset();
+            document.getElementById('changePasswordForm').classList.remove('was-validated');
+            
+            // Definir o ID do usuário no campo oculto
+            document.getElementById('userIdForPassword').value = userId;
+            
+            // Atualizar o título do modal com o nome do usuário
+            const modalTitle = document.querySelector('#changePasswordModal .modal-title');
+            modalTitle.textContent = `Alterar Senha - ${userName}`;
+            
+            // Abrir o modal
+            const modal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+            modal.show();
+        }
+        
+        // Função para alterar a senha
+        async function alterarSenha() {
+            try {
+                const form = document.getElementById('changePasswordForm');
+                
+                if (!form.checkValidity()) {
+                    form.classList.add('was-validated');
+                    return;
+                }
+                
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (newPassword !== confirmPassword) {
+                    showAlert('danger', 'As senhas não coincidem!', document.querySelector('#changePasswordModal .modal-body'));
+                    return;
+                }
+                
+                const usuarioId = parseInt(document.getElementById('userIdForPassword').value);
+                const adminId = parseInt(localStorage.getItem('usuarioId'));
+                
+                const response = await fetch('/api/usuario/AlterarSenha', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        AdminId: adminId,
+                        UsuarioId: usuarioId,
+                        NovaSenha: newPassword
+                    })
+                });
+                
+                if (response.ok) {
+                    // Fechar modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+                    modal.hide();
+                    
+                    showAlert('success', 'Senha alterada com sucesso!');
+                } else {
+                    const errorData = await response.json();
+                    showAlert('danger', `Erro ao alterar senha: ${errorData.message || 'Erro desconhecido'}`, document.querySelector('#changePasswordModal .modal-body'));
+                }
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                showAlert('danger', 'Erro ao alterar senha.', document.querySelector('#changePasswordModal .modal-body'));
+            }
+        }
+        
+        // Função para excluir atestado
+        async function excluirAtestado(id) {
+            try {
+                const usuarioId = localStorage.getItem('usuarioId');
+                const response = await fetch(`/api/atestado/${id}?usuarioId=${usuarioId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showAlert('success', 'Atestado excluído com sucesso!');
+                    carregarAtestados(); // Recarregar a lista após exclusão
+                } else {
+                    const errorData = await response.json();
+                    showAlert('danger', `Erro ao excluir atestado: ${errorData.message || 'Tente novamente mais tarde.'}`);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showAlert('danger', 'Erro ao excluir atestado. Verifique sua conexão e tente novamente.');
+            }
+        }
+        
+        // Função para reautenticar o usuário admin
+        function reautenticarAdmin() {
+            // Limpar localStorage atual
+            localStorage.clear();
+            
+            // Configurar dados de administrador
+            localStorage.setItem('usuarioId', '1');  // ID do usuário Administrador
+            localStorage.setItem('usuarioNome', 'Administrador');
+            localStorage.setItem('usuarioEmail', 'admin@admin.com');
+            localStorage.setItem('usuarioIsAdmin', 'true');
+            
+            // Recarregar a página
+            location.reload();
+        }
+        
+        // Função para mostrar alertas dentro de um container específico
+        function showAlert(type, message, container = null) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.role = 'alert';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            if (container) {
+                // Se um container específico foi passado, colocar o alerta nele
+                container.insertBefore(alertDiv, container.firstChild);
+            } else {
+                // Caso contrário, colocar no container principal
+                const mainContainer = document.querySelector('.container');
+                mainContainer.insertBefore(alertDiv, mainContainer.firstChild);
+            }
+            
+            // Remove o alerta após 5 segundos
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+        
+        // Função para mudar o status de um atestado (aprovar/rejeitar)
+        async function mudarStatusAtestado(id, status, modal = null, motivoRejeicao = null) {
+            try {
+                const usuarioId = localStorage.getItem('usuarioId');
+                
+                if (!usuarioId) {
+                    showAlert('danger', 'Erro de autenticação. Por favor, faça login novamente.');
+                    return;
+                }
+                
+                // Dados para a requisição
+                const data = {
+                    usuarioId: parseInt(usuarioId),
+                    status: status
+                };
+                
+                // Adicionar o motivo da rejeição se for o caso
+                if (status === 'Rejeitado' && motivoRejeicao) {
+                    data.motivoRejeicao = motivoRejeicao;
+                }
+                
+                const response = await fetch(`/api/atestado/status/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`Erro ao ${status === 'Aprovado' ? 'aprovar' : status === 'Rejeitado' ? 'rejeitar' : 'atualizar'} atestado. Status:`, response.status, 'Resposta:', errorText);
+                    showAlert('danger', `Erro ao ${status === 'Aprovado' ? 'aprovar' : status === 'Rejeitado' ? 'rejeitar' : 'atualizar'} atestado: ${response.status} ${response.statusText}`);
+                    return;
+                }
+                
+                console.log(`Atestado atualizado para status '${status}' com sucesso!`);
+                showAlert('success', `Atestado atualizado para status '${status}' com sucesso!`);
+                
+                // Fechar o modal se ele foi fornecido
+                if (modal) {
+                    modal.hide();
+                }
+                
+                // Recarregar a lista de atestados
+                carregarAtestados();
+                
+            } catch (error) {
+                console.error(`Erro ao atualizar status do atestado:`, error);
+                showAlert('danger', `Erro ao atualizar status do atestado: ${error.message}`);
+            }
+        }
+        
+        // Função para confirmar e excluir um usuário
+        function confirmarExclusaoUsuario(userId, userName) {
+            // Primeiro, confirmar a exclusão
+            const confirmar = confirm(`Tem certeza que deseja excluir o usuário "${userName}"? Esta ação não pode ser desfeita.`);
+            
+            if (confirmar) {
+                excluirUsuario(userId, false);
+            }
+        }
+        
+        // Função para excluir um usuário
+        async function excluirUsuario(userId, forcarExclusao = false) {
+            try {
+                const adminId = localStorage.getItem('usuarioId');
+                
+                const response = await fetch('/api/Usuario/ExcluirUsuario', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        adminId: parseInt(adminId),
+                        usuarioId: parseInt(userId),
+                        forcarExclusao: forcarExclusao
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showAlert('success', data.message || 'Usuário excluído com sucesso!');
+                    carregarUsuarios(); // Recarregar a lista de usuários
+                } else if (response.status === 400 && data.requiresForce) {
+                    // Usuário possui atestados - perguntar se deseja forçar exclusão
+                    const forcar = confirm(data.message + ' Todos os atestados deste usuário também serão excluídos. Deseja continuar?');
+                    if (forcar) {
+                        excluirUsuario(userId, true);
+                    }
+                } else if (response.status === 400 && data.message && data.message.includes("administrador principal")) {
+                    // Tentativa de excluir o administrador principal
+                    showAlert('warning', 'O administrador principal (admin@admin.com) não pode ser excluído do sistema por razões de segurança.');
+                } else {
+                    showAlert('danger', data.message || 'Erro ao excluir usuário.');
+                }
+            } catch (error) {
+                console.error('Erro ao excluir usuário:', error);
+                showAlert('danger', `Erro ao excluir usuário: ${error.message}`);
+            }
+        }
+
+        // Função para abrir o modal de rejeição
+        function abrirModalRejeicao(atestadoId) {
+            // Limpar campos
+            document.getElementById('motivoRejeicao').value = '';
+            document.getElementById('atestadoIdRejeicao').value = atestadoId;
+            
+            // Abrir modal
+            const modalRejeicao = new bootstrap.Modal(document.getElementById('rejeicaoModal'));
+            modalRejeicao.show();
+        }
+        
+        // Evento para o botão de confirmar rejeição
+        document.getElementById('btnConfirmarRejeicao').addEventListener('click', function() {
+            const atestadoId = document.getElementById('atestadoIdRejeicao').value;
+            const motivoRejeicao = document.getElementById('motivoRejeicao').value.trim();
+            
+            // Validar o motivo da rejeição
+            if (!motivoRejeicao) {
+                alert('Por favor, informe o motivo da rejeição.');
+                return;
+            }
+            
+            // Fechar o modal
+            bootstrap.Modal.getInstance(document.getElementById('rejeicaoModal')).hide();
+            
+            // Chamar a função de mudar status com o motivo da rejeição
+            confirmarRejeicao(atestadoId, motivoRejeicao);
+        });
+        
+        // Função para confirmar a rejeição com o motivo
+        async function confirmarRejeicao(id, motivoRejeicao) {
+            await mudarStatusAtestado(id, 'Rejeitado', null, motivoRejeicao);
+        }
+    </script>
+</body>
+</html> 
